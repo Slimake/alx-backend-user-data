@@ -33,3 +33,12 @@ def unauthorized() -> str:
       - 401 when the user is unauthorized
     """
     abort(401)
+
+
+@app_views.route('/forbidden', methods=['GET'], strict_slashes=False)
+def forbidden() -> str:
+    """ GET /api/v1/forbidden
+    Return:
+      - 403 when the user is authenticated, but not allowed to access resource
+    """
+    abort(403)
