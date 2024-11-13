@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """basic_auth Module
 """
-import binascii
 import base64
 from typing import TypeVar
 from api.v1.auth.auth import Auth
@@ -33,10 +32,9 @@ class BasicAuth(Auth):
             return None
         try:
             decoded_string = base64.b64decode(base64_authorization_header)
-        except (TypeError, binascii.Error):
+            return decoded_string.decode('utf-8')
+        except (TypeError, base64.binascii.Error, UnicodeDecodeError):
             return None
-
-        return decoded_string.decode('utf-8')
 
     def extract_user_credentials(
             self, decoded_base64_authorization_header: str) -> (str, str):
@@ -49,9 +47,9 @@ class BasicAuth(Auth):
         if decoded_base64_authorization_header.find(':') == -1:
             return (None, None)
 
-        user_pass = decoded_base64_authorization_header.split(':')
+        user_email, user_pwd = decoded_base64_authorization_header.split(':')
 
-        return (user_pass[0], user_pass[-1])
+        return (user_email, user_pwd)
 
     def user_object_from_credentials(
             self, user_email: str, user_pwd: str) -> TypeVar('User'):
@@ -74,3 +72,21 @@ class BasicAuth(Auth):
         if not users[0].is_valid_password(user_pwd):
             return None
         return users[0]
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """Retrieve the User instance for a request
+        """
+        auth = self.authorization_header(request)
+        extracted_auth = self.extract_base64_authorization_header(auth)
+        if extracted_auth is None:
+            return None
+        decoded_str = self.decode_base64_authorization_header(extracted_auth)
+        if decoded_str is None:
+            return None
+        user_pass = self.extract_user_credentials(decoded_str)
+        if user_pass == (None, None):
+            return None
+        user = self.user_object_from_credentials(user_pass[0], user_pass[1])
+        if user is None:
+            return None
+        return user
