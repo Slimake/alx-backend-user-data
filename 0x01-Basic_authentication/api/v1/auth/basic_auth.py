@@ -63,7 +63,10 @@ class BasicAuth(Auth):
             return None
 
         from models.user import User
-        users = User.search({'email': user_email})
+        try:
+            users = User.search({'email': user_email})
+        except KeyError:
+            return None
 
         if not users:
             return None
