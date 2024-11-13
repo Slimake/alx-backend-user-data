@@ -47,7 +47,10 @@ class BasicAuth(Auth):
         if decoded_base64_authorization_header.find(':') == -1:
             return (None, None)
 
-        user_email, user_pwd = decoded_base64_authorization_header.split(':')
+        dbah = decoded_base64_authorization_header
+        user_email = dbah[0:dbah.find(':')]
+        user_pwd = dbah[dbah.find(':') + 1:]
+        print(user_email, user_pwd)
 
         return (user_email, user_pwd)
 
