@@ -3,6 +3,7 @@
 """
 from flask import request
 from typing import List, TypeVar
+import fnmatch
 
 
 class Auth:
@@ -21,10 +22,14 @@ class Auth:
         else:
             path = path[:] + '/'
 
-        if path in excluded_paths:
-            return False
-        else:
-            return True
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith('*'):
+                if fnmatch.fnmatch(path, excluded_path):
+                    return False
+            else:
+                if path == excluded_paths:
+                    return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """Authorization header
