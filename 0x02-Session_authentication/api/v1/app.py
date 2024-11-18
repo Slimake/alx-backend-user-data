@@ -53,6 +53,25 @@ elif getenv("AUTH_TYPE") == "basic_auth":
                 abort(401)
             if request.current_user is None:
                 abort(403)
+elif getenv("AUTH_TYPE") == "session_auth":
+    from api.v1.auth.session_auth import SessionAuth
+    auth = SessionAuth()
+
+    @app.before_request
+    def filter_request():
+        """ Filter request
+        """
+        excluded_paths = [
+          '/api/v1/stat*', '/api/v1/unauthorized/',
+          '/api/v1/forbidden/']
+        if auth is None:
+            pass
+        if auth.require_auth(request.path, excluded_paths):
+            request.current_user = auth.current_user(request)
+            if auth.authorization_header(request) is None:
+                abort(401)
+            if request.current_user is None:
+                abort(403)
 
 
 @app.errorhandler(401)
