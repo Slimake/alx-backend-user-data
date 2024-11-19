@@ -28,7 +28,7 @@ class Auth:
                 if fnmatch.fnmatch(path, excluded_path):
                     return False
             else:
-                if path == excluded_paths:
+                if path == excluded_path:
                     return False
         return True
 
