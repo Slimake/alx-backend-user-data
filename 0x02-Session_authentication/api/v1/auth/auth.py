@@ -3,6 +3,7 @@
 """
 from flask import request
 from typing import List, TypeVar
+from os import getenv
 import fnmatch
 
 
@@ -44,3 +45,12 @@ class Auth:
         """Current User
         """
         return None
+
+    def session_cookie(self, request=None):
+        """Return a cookie value from a request
+        """
+        if request is None:
+            return None
+        SESSION_NAME = getenv('SESSION_NAME')
+
+        return request.cookies.get(SESSION_NAME)
