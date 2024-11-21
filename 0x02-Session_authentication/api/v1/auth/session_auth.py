@@ -2,7 +2,9 @@
 """session_auth Module
 """
 from api.v1.auth.auth import Auth
+from models.user import User
 from uuid import uuid4
+from typing import TypeVar
 
 
 class SessionAuth(Auth):
@@ -32,3 +34,11 @@ class SessionAuth(Auth):
             return None
 
         return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """Current User
+        """
+        session_id = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(session_id)
+
+        return User.get(user_id)
