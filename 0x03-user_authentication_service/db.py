@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.session import Session
-from typing import Any, Union, Dict
+from typing import Any
 
 from user import Base, User
 
@@ -50,8 +50,7 @@ class DB:
         filtered by the method’s input arguments.
         """
         try:
-            result: Union[User, None] = \
-                self._session.query(User).filter_by(**kwargs).first()
+            result = self._session.query(User).filter_by(**kwargs).first()
         except InvalidRequestError:
             raise InvalidRequestError
 
@@ -60,7 +59,7 @@ class DB:
 
         return result
 
-    def update_user(self, user_id: int, **kwargs: Dict[str, str]) -> None:
+    def update_user(self, user_id: int, **kwargs: Any) -> None:
         """Update the user’s attributes as passed in the method’s arguments
         """
         user = self.find_user_by(id=user_id)
