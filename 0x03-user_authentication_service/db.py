@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.session import Session
-from typing import Any
+from typing import Any, Union
 
 from user import Base, User
 
@@ -50,7 +50,8 @@ class DB:
         filtered by the method’s input arguments.
         """
         try:
-            result = self._session.query(User).filter_by(**kwargs).first()
+            result: Union[User, None] = \
+                self._session.query(User).filter_by(**kwargs).first()
         except InvalidRequestError:
             raise InvalidRequestError
 
