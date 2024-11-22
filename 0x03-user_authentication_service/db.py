@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.session import Session
-from typing import Union
+from typing import Any
 
 from user import Base, User
 
@@ -45,7 +45,7 @@ class DB:
 
         return user
 
-    def find_user_by(self, **kwargs) -> Union[User, None]:
+    def find_user_by(self, **kwargs: Any) -> User:
         """Returns the first row found in the users table as
         filtered by the method’s input arguments.
         """
