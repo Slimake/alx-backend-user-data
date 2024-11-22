@@ -60,7 +60,7 @@ class DB:
 
         return result
 
-    def update_user(self, user_id: int, **kwargs: Dict) -> None:
+    def update_user(self, user_id: int, **kwargs: Dict[str, str]) -> None:
         """Update the user’s attributes as passed in the method’s arguments
         """
         user = self.find_user_by(id=user_id)
