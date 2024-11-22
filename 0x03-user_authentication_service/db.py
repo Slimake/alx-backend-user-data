@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.session import Session
-from typing import Any, Union
+from typing import Any, Union, Dict
 
 from user import Base, User
 
@@ -60,11 +60,15 @@ class DB:
 
         return result
 
-    def update_user(self, user_id: str, **kwargs: Any) -> None:
+    def update_user(self, user_id: str, **kwargs: Dict) -> None:
         """Update the user’s attributes as passed in the method’s arguments
         """
         user = self.find_user_by(id=user_id)
+
         for key, value in kwargs.items():
+            if key not in user.__dict__:
+                raise ValueError
+
             if key == 'email' and key in user.__dict__:
                 user.email = value
             elif key == 'hashed_password' and key in user.__dict__:
