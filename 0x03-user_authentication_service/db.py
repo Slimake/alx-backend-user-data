@@ -64,7 +64,6 @@ class DB:
         """Update the user’s attributes as passed in the method’s arguments
         """
         user = self.find_user_by(id=user_id)
-        print(type(user_id))
         for key, value in kwargs.items():
             if key not in user.__dict__:
                 raise ValueError
