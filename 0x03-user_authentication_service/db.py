@@ -59,3 +59,21 @@ class DB:
             raise NoResultFound
 
         return result
+
+    def update_user(self, user_id: str, **kwargs: Any) -> None:
+        """Update the user’s attributes as passed in the method’s arguments
+        """
+        user = self.find_user_by(id=user_id)
+        for key, value in kwargs.items():
+            if key == 'email' and key in user.__dict__:
+                user.email = value
+            elif key == 'hashed_password' and key in user.__dict__:
+                user.hashed_password = value
+            elif key == 'session_id' and key in user.__dict__:
+                user.session_id = value
+            elif key == 'reset_token' and key in user.__dict__:
+                user.reset_token = value
+
+        self._session.commit()
+
+        return None
