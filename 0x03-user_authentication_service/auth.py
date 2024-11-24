@@ -63,10 +63,10 @@ class Auth:
             user = self._db.find_user_by(email=email)
             session_id = _generate_uuid()
             user.session_id = session_id
-            self._db._session.commit()
-            return session_id
         except NoResultFound:
             return None
+
+        return session_id
 
     def get_user_from_session_id(self, session_id: str) -> Union[User, None]:
         """Get the user of the session_id or
@@ -86,6 +86,5 @@ class Auth:
         """
         user = self._db.find_user_by(id=user_id)
         user.session_id = None
-        self._db._session.commit()
 
         return None

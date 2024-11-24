@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """app Module
 """
-from flask import Flask, jsonify, request, abort, redirect
+from flask import Flask, jsonify, request, abort, redirect, url_for
 from auth import Auth
 
 AUTH = Auth()
@@ -53,13 +53,13 @@ def logout() -> str:
     """Logout user
     """
     session_id = request.cookies.get('session_id')
-    user = Auth.get_user_from_session_id(session_id)
+    user = AUTH.get_user_from_session_id(session_id)
     if user is not None:
-        Auth.destroy_session(user.id)
+        AUTH.destroy_session(user.id)
     else:
         abort(403)
 
-    return redirect('/index')
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
