@@ -52,7 +52,7 @@ def login() -> str:
 def logout() -> str:
     """Logout user
     """
-    session_id = request.cookie.get(session_id)
+    session_id = request.cookies.get('session_id')
     user = Auth.get_user_from_session_id(session_id)
     if user is not None:
         Auth.destroy_session(user.id)
