@@ -98,7 +98,7 @@ class Auth:
         try:
             user = self._db.find_user_by(email=email)
             token = uuid4()
-            user.reset_token = token
+            user.reset_token = str(token)
         except NoResultFound:
             raise ValueError
 
