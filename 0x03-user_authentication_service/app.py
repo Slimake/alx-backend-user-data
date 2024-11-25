@@ -62,5 +62,19 @@ def logout() -> str:
     return redirect(url_for('index'))
 
 
+@app.route("/profile", methods=['GET'], strict_slashes=False)
+def profile() -> str:
+    """Find a user, respond with 200 HTTP status code
+    If the session ID is invalid or the user does not exist,
+    respond with a 403 HTTP status.
+    """
+    session_id = request.cookies.get('session_id')
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is not None:
+        return jsonify({"email": user.email}), 200
+    else:
+        abort(403)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
