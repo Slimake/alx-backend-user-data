@@ -88,18 +88,17 @@ class Auth:
         user.session_id = None
 
         return None
-    
+
     def get_reset_password_token(self, email: str) -> str:
         """Find the user corresponding to the email.
-        If the user does not exist, raise a ValueError exception. 
+        If the user does not exist, raise a ValueError exception.
         If it exists, generate a UUID and update the user’s reset_token
         database field. Return the token.
         """
         try:
             user = self._db.find_user_by(email=email)
-            token = uuid4()
-            user.reset_token = str(token)
-            self._db.__session.commit()
+            token = str(uuid4())
+            user.reset_token = token
         except NoResultFound:
             raise ValueError
 
